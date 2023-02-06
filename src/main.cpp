@@ -4,7 +4,7 @@
 #define COMPUTER 1
 #define USERMOVE 'X'
 #define COMPUTERMOVE 'O'
-#define EMPTYMOVE '_'
+#define EMPTYMOVE ' '
 
 struct Move {
     int row, col;
@@ -55,9 +55,11 @@ int legalMovesLeft(char board[3][3]) {
 void display(char board[3][3]) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            std::cout << board[i][j];
+            std::cout << " " << board[i][j] << " ";
+            if (j != 2) std::cout << "|";
         }
         std::cout << std::endl;
+        if (i != 2) std::cout << "-----------" << std::endl;
     }
 }
 
@@ -124,8 +126,8 @@ Move getBestMove(char board[3][3]) {
 }
 
 int isLegal(Move move, char board[3][3]) {
-    if (move.row <= 2 && move.col <= 2 && move.row >= 0 && move.col >= 0) {
-        if (board[move.row][move.row] == EMPTYMOVE) return true;
+    if (move.row >= 0 && move.col <=2 && move.row >= 0 && move.col <= 2) {
+        if (board[move.row][move.col] == EMPTYMOVE) return true;
     }
     return false;
 }
@@ -136,7 +138,7 @@ void play(int turn) {
     initBoard(board);
     while (legalMovesLeft(board) && evaluate(board) == 0) {
         if (turn == USER) {
-            std::cout << "Your turn, enter row and col: ";
+            std::cout << "Your turn, enter the row and col: ";
             int row, col;
             std::cin >> row >> col;
             row -= 1;
@@ -148,7 +150,7 @@ void play(int turn) {
                 std::cout << "Invalid move, try again" << std::endl;
                 continue;
             }
-            board[row][col] = USERMOVE;
+            board[userMove.row][userMove.col] = USERMOVE;
             display(board);
             turn = COMPUTER;
         } else if (turn == COMPUTER) {
