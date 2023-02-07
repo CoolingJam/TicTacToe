@@ -157,7 +157,6 @@ void play(int turn) {
                 continue;
             }
             board[userMove.row][userMove.col] = USERMOVE;
-            display(board);
             turn = COMPUTER;
         } else if (turn == COMPUTER) {
             Move bestMove = getBestMove(board);
