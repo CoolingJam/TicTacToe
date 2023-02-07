@@ -53,6 +53,7 @@ int legalMovesLeft(char board[3][3]) {
 }
 
 void display(char board[3][3]) {
+    std::cout << std::endl;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             std::cout << " " << board[i][j] << " ";
@@ -61,9 +62,10 @@ void display(char board[3][3]) {
         std::cout << std::endl;
         if (i != 2) std::cout << "-----------" << std::endl;
     }
+    std::cout << std::endl;
 }
 
-int minimax(char board[3][3], int depth, bool isMax) {
+int minimax(char board[3][3], int depth, bool isMax, int alpha, int beta) {
     int score = evaluate(board);
     if (score == 1) return score;
     if (score == -1) return score;
@@ -74,8 +76,10 @@ int minimax(char board[3][3], int depth, bool isMax) {
             for (int j = 0; j < 3; j++) {
                 if (board[i][j] == EMPTYMOVE) {
                         board[i][j] = COMPUTERMOVE;
-                        best = std::max(best, minimax(board, depth+1, !isMax));
+                        best = std::max(best, minimax(board, depth+1, !isMax, alpha, beta));
+                        alpha = std::max(alpha, best);
                         board[i][j] = EMPTYMOVE;
+                        if (beta <= alpha) break; // alpha beta pruning
                 }
             }
         }
@@ -86,8 +90,10 @@ int minimax(char board[3][3], int depth, bool isMax) {
             for (int j = 0; j < 3; j++) {
                 if (board[i][j] == EMPTYMOVE) {
                     board[i][j] = USERMOVE;
-                    best = std::min(best, minimax(board, depth+1, !isMax));
+                    best = std::min(best, minimax(board, depth+1, !isMax, alpha, beta));
+                    beta = std::min(beta, best);
                     board[i][j] = EMPTYMOVE;
+                    if (beta <= alpha) break; // alpha beta pruning
                 }
             }
         }
@@ -112,7 +118,7 @@ Move getBestMove(char board[3][3]) {
         for (int j = 0; j < 3; j++) {
             if (board[i][j] == EMPTYMOVE) {
             board[i][j] = COMPUTERMOVE;
-            int moveV = minimax(board, 0, false);
+            int moveV = minimax(board, 0, false, -2, 2);
             board[i][j] = EMPTYMOVE;
             if (moveV > bestV) {
                 bestM.row = i;
