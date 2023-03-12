@@ -15,7 +15,6 @@ This is a Tic Tac Toe bot written in C++ that uses the **minimax** algorithmn wi
 ## Running compiler
 
 - Navigate into the TicTacToe directory via the command line (by using the `cd` command)
-- Run `g++ -o TicTacToe src/*.cpp` (if you are on windows, append .exe to the TicTacToe string in the command)
-
+- Run `g++ -o TicTacToe src/*.cpp`
 # Todo
 - Adding choice if user wants to be X or O

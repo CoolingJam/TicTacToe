@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #define USER 0
 #define COMPUTER 1
@@ -9,6 +10,7 @@
 struct Move {
     int row, col;
 };
+
 
 int evaluate(char board[3][3]) {
     // Result of this function is who won
@@ -56,7 +58,11 @@ void display(char board[3][3]) {
     std::cout << std::endl;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            std::cout << " " << board[i][j] << " ";
+            if (board[i][j] != EMPTYMOVE) {
+                std::cout << " " << board[i][j] << " ";
+            } else {
+                std::cout << " " << i*3+j+1 << " ";
+            }
             if (j != 2) std::cout << "|";
         }
         std::cout << std::endl;
@@ -142,16 +148,22 @@ int isLegal(Move move, char board[3][3]) {
 void play(int turn) {
     char board[3][3];
     initBoard(board);
+    display(board);
     while (legalMovesLeft(board) && evaluate(board) == 0) {
         if (turn == USER) {
-            std::cout << "Your turn, enter the row and col: ";
-            int row, col;
-            std::cin >> row >> col;
-            row -= 1;
-            col -= 1; // minus 1 since its zero based
+            std::cout << "Your turn, enter the number: ";
+            int n;
+            std::cin >> n;
+            n--;
+            if (n > 9 && n < 1) {
+                std::cout << "Invalid move, try again" << std::endl;
+                continue;
+            }
+            int row = n / 3;
+            int col = n % 3;
             Move userMove;
-            userMove.row = row;
             userMove.col = col;
+            userMove.row = row;
             if (!isLegal(userMove, board)) {
                 std::cout << "Invalid move, try again" << std::endl;
                 continue;
@@ -169,7 +181,9 @@ void play(int turn) {
     if (evaluate(board) == 1) std::cout << "Computer won";
     if (evaluate(board) == -1) std::cout << "User won";
     if (evaluate(board) == 0) std::cout << "Draw";
-    std::cout << std::endl;
+    std::cout << std::endl << "Press enter to exit...";
+    std::cin.ignore();
+    std::cin.get();
 }
 
 int main() {
